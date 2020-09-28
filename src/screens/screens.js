@@ -1,6 +1,6 @@
 
 import React,{useState,useEffect} from 'react';
-import {View,Text,Image,FlatList,TouchableOpacity,ActivityIndicator} from 'react-native';
+import {View,Text,Image,FlatList,TouchableOpacity,ActivityIndicator,ScrollView} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import ASSET_FILE from '../../assets/json/champions.json';
@@ -116,6 +116,7 @@ const ChampionProfileScreen= ({route,navigation}) => {
 
   const [isLoaded, setLoad] = useState(false);
   const [dataChampion, setData] = useState({});
+  const [nSpell, setSpell] = useState(0);
 
   useEffect (() =>{
     fetch('http://ddragon.leagueoflegends.com/cdn/10.19.1/data/it_IT/champion/' +id+ '.json')
@@ -136,10 +137,27 @@ const ChampionProfileScreen= ({route,navigation}) => {
     return 'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/' + nameJpg;
   }
 
+  const getSpell = (id) => {
+
+    var spells = [];
+
+    spells = dataChampion.data[id].spells[0].id
+
+    var keys ="";
+    Object.keys(spells).forEach((key) =>{
+      keys += key;
+    })
+    alert(dataChampion.data[id].spells[0].id);
+
+  }
+
   if(isLoaded){
+    var spellBox = 
+    <Text style={{textAlign:'center',color: 'white'}}>
+    {dataChampion.data[id].spells[nSpell].description}
+   </Text>;
   return(
-  
-  <View style={{flex:1,alignItems:'center',backgroundColor: BACKGROUND_COLOR}}>
+  <ScrollView style={{backgroundColor: BACKGROUND_COLOR}}>
     
     <Text style={{color:'white', fontWeight: 'bold', fontSize:30, textAlign:"center"}}>
       {FILE[id].name}
@@ -173,9 +191,86 @@ const ChampionProfileScreen= ({route,navigation}) => {
       fontStyle: "italic", }}>
         {dataChampion.data[id].lore}
     </Text>
-
-  
-  </View>);
+    <View style={{flex:1, flexDirection:"row", padding: 5, justifyContent: 'center',}}>
+      <TouchableWithoutFeedback
+      onPress={()=>{setSpell(0)}}>
+        <Text style={{color:'white',textAlign: "center", fontWeight: "bold"}}>
+          Q
+        </Text>
+    <Image
+          style={{
+              width: 60,
+              height: 60,
+              margin: 10,
+              resizeMode: 'contain'
+          }}
+          source={{
+              uri: 'http://ddragon.leagueoflegends.com/cdn/10.19.1/img/spell/' + dataChampion.data[id].spells[0].id + ".png"
+          }}        
+      />
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
+      onPress={()=>{setSpell(1)}}>
+        <Text style={{color:'white',textAlign: "center", fontWeight: "bold"}}>
+          W
+        </Text>
+      <Image
+          style={{
+              width: 60,
+              height: 60,
+              margin: 10,
+              resizeMode: 'contain'
+          }}
+          source={{
+              uri: 'http://ddragon.leagueoflegends.com/cdn/10.19.1/img/spell/' + dataChampion.data[id].spells[1].id + ".png"
+          }}        
+      />
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
+      onPress={()=>{setSpell(2)}}>
+        <Text style={{color:'white',textAlign: "center", fontWeight: "bold"}}>
+          E
+        </Text>
+      <Image
+          style={{
+              width: 60,
+              height: 60,
+              margin: 10,
+              resizeMode: 'contain'
+          }}
+          source={{
+              uri: 'http://ddragon.leagueoflegends.com/cdn/10.19.1/img/spell/' + dataChampion.data[id].spells[2].id + ".png"
+          }}        
+      />
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
+      onPress={()=>{setSpell(3)}}>
+        <Text style={{color:'white',textAlign: "center", fontWeight: "bold"}}>
+          R
+        </Text>
+      <Image
+          style={{
+              width: 60,
+              height: 60,
+              padding: 5,
+              margin: 10
+          }}
+          source={{
+              uri: 'http://ddragon.leagueoflegends.com/cdn/10.19.1/img/spell/' + dataChampion.data[id].spells[3].id + ".png"
+          }}        
+      />
+      </TouchableWithoutFeedback>
+    </View>
+    <View style={{
+      margin: 10,
+      padding:10,
+      paddingBottom:10,
+      backgroundColor: '#0e1726',
+      borderRadius: 10,
+    }}>
+      {spellBox}
+    </View>
+  </ScrollView>);
         
   }
   else{
